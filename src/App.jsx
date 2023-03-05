@@ -37,7 +37,7 @@ function App() {
         <ul>
           {data.map((item) => (
             <li key={item.id}>
-              {item.name} {item.phone}
+              {item.name} {item.phone} {item.website}
             </li>
           ))}
         </ul>
