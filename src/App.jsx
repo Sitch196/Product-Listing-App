@@ -1,55 +1,90 @@
-import { useEffect } from "react";
-import { useState } from "react";
-import Spinner from "./Spinner";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
 function App() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const getData = async function () {
-      try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/users"
-        );
-        const json = await response.json();
-        setData(json);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    const Delay = setTimeout(() => {
-      getData();
-    }, 2000);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
-    return () => clearTimeout(Delay);
-  }, []);
+  const onSubmit = (data) => {
+    console.log(data);
+    reset();
+  };
 
   return (
     <div>
-      {loading && (
-        <SpinnerWrapper>
-          <Spinner />
-        </SpinnerWrapper>
-      )}
-      {data && (
-        <ul>
-          {data.map((item) => (
-            <li key={item.id}>
-              {item.name} {item.phone} {item.website}
-            </li>
-          ))}
-        </ul>
-      )}
+      <Container>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            type="text"
+            placeholder="Name"
+            {...register("name", {
+              required: "Name is required",
+              pattern: {
+                value: /^[A-Za-z\s]+$/,
+                message: "Name must only contain letters and spaces",
+              },
+            })}
+          />
+          {errors.name && <p style={{ color: "red" }}>{errors.name.message}</p>}
+          <Input
+            type="email"
+            placeholder="Email"
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email",
+              },
+            })}
+          />
+          {errors.email && (
+            <p style={{ color: "red" }}>{errors.email.message}</p>
+          )}
+          <Input
+            placeholder="Password"
+            type="password"
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            })}
+          />
+          {errors.password && (
+            <p style={{ color: "red" }}>{errors.password.message}</p>
+          )}
+          <Button type="submit">Submit</Button>
+        </Form>
+      </Container>
+      {/* <Child {...data} /> */}
     </div>
   );
 }
 
 export default App;
-const SpinnerWrapper = styled.div`
+const Input = styled.input`
+  width: 100%;
+  height: 3rem;
+  border-radius: 5px;
+  text-indent: 1rem;
+`;
+const Button = styled.button`
+  width: 30%;
+  height: 2.5rem;
+  margin: 0 auto;
+`;
+const Form = styled.form`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  flex-direction: column;
+  gap: 0.3rem;
+`;
+const Container = styled.div`
+  width: 25rem;
+  height: 15rem;
+  /* background-color: lightblue; */
 `;
