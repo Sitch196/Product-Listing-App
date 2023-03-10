@@ -18,6 +18,7 @@ function App() {
     <div>
       <Container>
         <Form onSubmit={handleSubmit(onSubmit)}>
+          <label>Name</label>
           <Input
             type="text"
             placeholder="Name"
@@ -30,6 +31,8 @@ function App() {
             })}
           />
           {errors.name && <p style={{ color: "red" }}>{errors.name.message}</p>}
+          <label>E-mail</label>
+
           <Input
             type="email"
             placeholder="Email"
@@ -44,6 +47,9 @@ function App() {
           {errors.email && (
             <p style={{ color: "red" }}>{errors.email.message}</p>
           )}
+
+          <label>Password</label>
+
           <Input
             placeholder="Password"
             type="password"
