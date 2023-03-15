@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { ProductProvider } from "./Context";
 import styled from "styled-components";
 import { Route, Routes } from "react-router-dom";
 import Footer from "./Footer/Footer";
@@ -16,14 +17,16 @@ const GlobalStyle = createGlobalStyle`
 `;
 function App() {
   return (
-    <AppContainer>
-      <GlobalStyle />
-      <Routes>
-        <Route path="/" element={<Product_list_page />} />
-        <Route path="product_add_page" element={<Product_add_page />} />
-      </Routes>
-      <Footer />
-    </AppContainer>
+    <ProductProvider>
+      <AppContainer>
+        <GlobalStyle />
+        <Routes>
+          <Route path="/" element={<Product_list_page />} />
+          <Route path="product_add_page" element={<Product_add_page />} />
+        </Routes>
+        <Footer />
+      </AppContainer>
+    </ProductProvider>
   );
 }
 

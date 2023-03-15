@@ -5,7 +5,7 @@ function Footer() {
     <div>
       <hr style={{ borderWidth: "2px" }} />
       <Scandi>
-        <h3>Scandiweb Test assignment</h3>
+        <h3>Scandiweb Test Assignment</h3>
       </Scandi>
     </div>
   );
