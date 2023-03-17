@@ -12,6 +12,13 @@ function Product_add_page() {
   const [sku, setSku] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [dvd, setDvd] = useState("");
+  const [book, setBook] = useState("");
+
+  // const [furniture, setFurniture] = useState("");
+  const [height, setHeight] = useState("");
+  const [width, setWidth] = useState("");
+  const [length, setLength] = useState("");
   const { products, setProducts } = useContext(ProductContext);
 
   const handleSave = (event) => {
@@ -20,26 +27,48 @@ function Product_add_page() {
       sku: sku,
       name: name,
       price: price,
+      type: "",
+      details: {},
     };
+    if (showDVDInput) {
+      product.type = "DVD";
+      product.details = { dvd: dvd };
+    } else if (showBookInput) {
+      product.type = "Book";
+      product.details = { book: book };
+    } else if (showFurnitureInput) {
+      product.type = "Furniture";
+      product.details = { height: height, width: width, length: length };
+    }
+
     setProducts([...products, product]);
     setSku("");
     setName("");
     setPrice("");
+    setDvd("");
+    setBook("");
+    setHeight("");
+    setWidth("");
+    setLength("");
+    // setFurniture("");
 
     navigate("/");
   };
 
-  const goHome = () => {
-    navigate("/");
-  };
-  console.log(products);
+  // console.log(products);
   return (
     <Content>
       <Container>
         <h1>Products Add</h1>
         <div>
           <BtnSave onClick={handleSave}>Save</BtnSave>
-          <BtnCancel onClick={goHome}>Cancel</BtnCancel>
+          <BtnCancel
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            Cancel
+          </BtnCancel>
         </div>
       </Container>
       <FormContainer>
@@ -87,7 +116,11 @@ function Product_add_page() {
             <h3>Size (mb)</h3>
             <DVD>
               <label>DVD Input</label>
-              <input type="text" />
+              <input
+                type="text"
+                value={dvd}
+                onChange={(e) => setDvd(e.target.value)}
+              />
             </DVD>
           </div>
         )}
@@ -96,7 +129,11 @@ function Product_add_page() {
             <h3>Weight (kg)</h3>
             <Book>
               <label>Book Input</label>
-              <input type="text" />
+              <input
+                type="text"
+                value={book}
+                onChange={(e) => setBook(e.target.value)}
+              />
             </Book>
           </div>
         )}
@@ -106,15 +143,27 @@ function Product_add_page() {
             <Furn>
               <Dimensions>
                 <label>Height </label>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                />
               </Dimensions>
               <Dimensions>
                 <label>Width</label>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={width}
+                  onChange={(e) => setWidth(e.target.value)}
+                />
               </Dimensions>
               <Dimensions>
                 <label>Length</label>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={length}
+                  onChange={(e) => setLength(e.target.value)}
+                />
               </Dimensions>
             </Furn>
           </div>
