@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { ProductContext } from "../Context";
+import { useForm } from "react-hook-form";
 import { Navigate, useNavigate } from "react-router-dom";
 
 function Product_add_page() {
@@ -9,20 +10,26 @@ function Product_add_page() {
   const [showDVDInput, setShowDVDInput] = useState(false);
   const [showBookInput, setShowBookInput] = useState(false);
   const [showFurnitureInput, setShowFurnitureInput] = useState(false);
+  //////////////////////////////////////////////////////////
   const [sku, setSku] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [dvd, setDvd] = useState("");
   const [book, setBook] = useState("");
-
-  // const [furniture, setFurniture] = useState("");
   const [height, setHeight] = useState("");
   const [width, setWidth] = useState("");
   const [length, setLength] = useState("");
   const { products, setProducts } = useContext(ProductContext);
+  ///////////////////////////////////////////////////////////////
 
-  const handleSave = (event) => {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleSave = () => {
+    // event.preventDefault();
     const product = {
       sku: sku,
       name: name,
@@ -61,7 +68,7 @@ function Product_add_page() {
       <Container>
         <h1>Products Add</h1>
         <div>
-          <BtnSave onClick={handleSave}>Save</BtnSave>
+          <BtnSave onClick={handleSubmit(handleSave)}>Save</BtnSave>
           <BtnCancel
             onClick={() => {
               navigate("/");
@@ -72,33 +79,74 @@ function Product_add_page() {
         </div>
       </Container>
       <FormContainer>
-        <IDDiv>
+        <InputDivs>
           <label>SKU</label>
-          <input
+          <Input
             type="text"
+            placeholder="Sku"
+            {...register("sku", {
+              required: "SKU is required",
+              pattern: {
+                value: /^[a-zA-Z0-9]+$/,
+                message: "Sku must  contain only numbers and letters",
+              },
+            })}
             value={sku}
             onChange={(e) => setSku(e.target.value)}
           />
-        </IDDiv>
-        <NameDiv>
+        </InputDivs>
+        {errors.sku && (
+          <p style={{ color: "red", fontSize: "0.8", textAlign: "right" }}>
+            {errors.sku.message}{" "}
+          </p>
+        )}
+        <InputDivs>
           <label>Name</label>
-          <input
+          <Input
             type="text"
+            placeholder="Name"
+            {...register("name", {
+              required: "Name is required",
+              pattern: {
+                value: /^[a-zA-Z0-9]+$/,
+                message: "Name must  contain only numbers and letters",
+              },
+            })}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-        </NameDiv>
-        <PriceDiv>
+        </InputDivs>
+        {errors.name && (
+          <p style={{ color: "red", fontSize: "0.8", textAlign: "right" }}>
+            {errors.name.message}{" "}
+          </p>
+        )}
+        <InputDivs>
           <label>Price</label>
-          <input
-            type="text"
+          <Input
+            type="number"
+            placeholder="Price"
+            {...register("price", {
+              required: "Price Is Required",
+              min: 0,
+              pattern: {
+                value: /^\d+$/,
+                message: "Price must contain only numbers",
+              },
+            })}
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            min={0}
           />
-        </PriceDiv>
-        <TypeDiv>
+        </InputDivs>
+        {errors.price && (
+          <p style={{ color: "red", fontSize: "0.8", textAlign: "right" }}>
+            {errors.price.message}{" "}
+          </p>
+        )}
+        <InputDivs>
           <label>Product Type</label>
-          <select
+          <Select
             onChange={(e) => {
               setShowDVDInput(e.target.value === "DVD");
               setShowBookInput(e.target.value === "Book");
@@ -109,62 +157,145 @@ function Product_add_page() {
             <option>DVD</option>
             <option>Book</option>
             <option>Furniture</option>
-          </select>
-        </TypeDiv>
+          </Select>
+        </InputDivs>
         {showDVDInput && (
           <div>
-            <h3>Size (mb)</h3>
-            <DVD>
-              <label>DVD Input</label>
-              <input
+            <h3>Provide Size</h3>
+            <InputDivs>
+              <label>Size (mb)</label>
+              <Input
                 type="text"
                 value={dvd}
+                placeholder="DVD"
+                {...register("dvd", {
+                  required: "Size is required",
+                  pattern: {
+                    value: /^\d+$/,
+                    message: "Must contain only numbers",
+                  },
+                })}
                 onChange={(e) => setDvd(e.target.value)}
               />
-            </DVD>
+            </InputDivs>
+            {errors.dvd && (
+              <p style={{ color: "red", fontSize: "0.8", textAlign: "right" }}>
+                {errors.dvd.message}{" "}
+              </p>
+            )}
           </div>
         )}
         {showBookInput && (
           <div>
-            <h3>Weight (kg)</h3>
-            <Book>
-              <label>Book Input</label>
-              <input
+            <h3>Provide Weight</h3>
+            <InputDivs>
+              <label>Weight (kg)</label>
+              <Input
                 type="text"
+                placeholder="Book"
+                {...register("book", {
+                  required: "Weight is required",
+                  pattern: {
+                    value: /^\d+$/,
+                    message: "Must Contain Only Numbers",
+                  },
+                })}
                 value={book}
                 onChange={(e) => setBook(e.target.value)}
               />
-            </Book>
+            </InputDivs>
+            {errors.book && (
+              <p style={{ color: "red", fontSize: "0.8", textAlign: "right" }}>
+                {errors.book.message}{" "}
+              </p>
+            )}
           </div>
         )}
         {showFurnitureInput && (
           <div>
             <h3>Provide Dimensions</h3>
             <Furn>
-              <Dimensions>
+              <InputDivs>
                 <label>Height </label>
-                <input
+                <Input
                   type="text"
+                  placeholder="height"
+                  {...register("height", {
+                    required: "Height is required",
+                    pattern: {
+                      value: /^\d+$/,
+                      message: "Must Contain Only Numbers",
+                    },
+                  })}
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
                 />
-              </Dimensions>
-              <Dimensions>
+              </InputDivs>
+              {errors.height && (
+                <p
+                  style={{
+                    color: "red",
+                    fontSize: "0.8",
+                    textAlign: "right",
+                  }}
+                >
+                  {errors.height.message}{" "}
+                </p>
+              )}
+              <InputDivs>
                 <label>Width</label>
-                <input
+                <Input
                   type="text"
+                  placeholder="width"
+                  {...register("width", {
+                    required: "Width is required",
+                    pattern: {
+                      value: /^\d+$/,
+                      message: "Must Contain Only Numbers",
+                    },
+                  })}
                   value={width}
                   onChange={(e) => setWidth(e.target.value)}
                 />
-              </Dimensions>
-              <Dimensions>
+              </InputDivs>
+              {errors.width && (
+                <p
+                  style={{
+                    color: "red",
+                    fontSize: "0.8",
+                    textAlign: "right",
+                  }}
+                >
+                  {errors.width.message}{" "}
+                </p>
+              )}
+              <InputDivs>
                 <label>Length</label>
-                <input
+                <Input
                   type="text"
+                  placeholder="Length"
+                  {...register("length", {
+                    required: "Length is required",
+                    pattern: {
+                      value: /^\d+$/,
+                      message: "Must Contain Only Numbers",
+                    },
+                  })}
                   value={length}
                   onChange={(e) => setLength(e.target.value)}
                 />
-              </Dimensions>
+              </InputDivs>
+              {errors.length && (
+                <p
+                  style={{
+                    color: "red",
+                    fontSize: "0.8",
+                    textAlign: "right",
+                  }}
+                >
+                  {errors.length.message}{" "}
+                </p>
+              )}
             </Furn>
           </div>
         )}
@@ -174,43 +305,50 @@ function Product_add_page() {
 }
 
 export default Product_add_page;
-
+const Select = styled.select`
+  padding: 0.4rem 0;
+  font-weight: bold;
+  outline: none;
+  &:focus {
+    border: none;
+    outline: 1px solid lightgrey;
+  }
+`;
+const Input = styled.input`
+  width: 14rem;
+  height: 2rem;
+  border-radius: 5px;
+  text-indent: 10px;
+  border: 1px solid lightgrey;
+  &:focus {
+    outline: 1px solid gray;
+  }
+  box-shadow: 0 2px 4px lightgrey;
+`;
 const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3rem;
 `;
-const Dimensions = styled.div`
+const InputDivs = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 5rem;
 `;
-const IDDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-const DVD = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-const Book = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
+
 const Furn = styled.div`
+  /* border: 1px solid red; */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding-top: 1rem;
   justify-content: space-between;
-  width: 15rem;
+  width: 25rem;
+  @media (width < 500px) {
+    width: 20rem;
+  }
 `;
-const NameDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-const PriceDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
+
 const FormContainer = styled.div`
   /* border: 1px solid red; */
   padding: 3rem;
@@ -223,26 +361,30 @@ const FormContainer = styled.div`
     width: 25rem;
   }
   @media (width<500px) {
-    width: 18rem;
+    width: 22rem;
   }
 `;
 const BtnSave = styled.button`
   text-transform: uppercase;
   padding: 0.5rem 0.5rem;
+  background-color: whitesmoke;
+  margin: 0 0.5rem;
+  border: 1px solid lightgrey;
+  cursor: pointer;
+  border-radius: 5px;
 `;
 const BtnCancel = styled.button`
   text-transform: uppercase;
   padding: 0.5rem 0.5rem;
+  border: 1px solid lightgrey;
+  background-color: whitesmoke;
+  cursor: pointer;
+  border-radius: 5px;
 `;
 const Container = styled.div`
-  /* border: 1px solid red; */
-  background-color: lightgray;
+  border-bottom: 1px solid lightgrey;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 0.6rem;
-`;
-const TypeDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
 `;

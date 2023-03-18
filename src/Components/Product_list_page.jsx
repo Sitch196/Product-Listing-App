@@ -39,8 +39,8 @@ function Product_list_page() {
       <Header>
         <h1>Products List</h1>
         <Buttons_Container>
-          <Link to="product_add_page">ADD</Link>
-          <button onClick={removeSelectedProducts}>MASS DELETE</button>
+          <AddLink to="product_add_page">ADD</AddLink>
+          <DeleteBtn onClick={removeSelectedProducts}>MASS DELETE</DeleteBtn>
         </Buttons_Container>
       </Header>
       <ProductWrapper>
@@ -81,6 +81,30 @@ function Product_list_page() {
 }
 
 export default Product_list_page;
+const AddLink = styled(Link)`
+  text-decoration: none;
+  border: 1px solid lightgrey;
+  background-color: whitesmoke;
+  padding: 0.3rem 0.5rem;
+  margin: 0 1rem;
+  border-radius: 5px;
+  &:visited {
+    color: black;
+  }
+`;
+const DeleteBtn = styled.button`
+  background-color: whitesmoke;
+  padding: 0.5rem 0.5rem;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.8);
+    color: whitesmoke;
+    font-weight: bold;
+  }
+`;
 const Checkbox = styled.input`
   position: relative;
   right: 5rem;
@@ -93,7 +117,7 @@ const ProductWrapper = styled.div`
   gap: 1rem;
 `;
 const Product = styled.div`
-  border: 1px solid gray;
+  border: 1px solid lightgrey;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   width: 15rem;
   text-align: center;
@@ -104,8 +128,8 @@ const Container = styled.div`
   flex-direction: column;
 `;
 const Header = styled.div`
-  /* border: 1px solid red; */
-  background-color: lightgray;
+  border-bottom: 1px solid lightgrey;
+  /* background-color: lightgray; */
   display: flex;
   align-items: center;
   justify-content: space-between;
