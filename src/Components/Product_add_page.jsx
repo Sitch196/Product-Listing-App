@@ -1,5 +1,16 @@
 import React, { useState, useContext } from "react";
-import styled from "styled-components";
+import {
+  Select,
+  Input,
+  Content,
+  InputDivs,
+  Furn,
+  FormContainer,
+  BtnSave,
+  BtnCancel,
+  Container,
+  Logo,
+} from "../style/productadd";
 import { ProductContext } from "../Context";
 import { useForm } from "react-hook-form";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -62,11 +73,10 @@ function Product_add_page() {
     navigate("/");
   };
 
-  // console.log(products);
   return (
     <Content>
       <Container>
-        <h1>Products Add</h1>
+        <Logo>Products Add</Logo>
         <div>
           <BtnSave onClick={handleSubmit(handleSave)}>Save</BtnSave>
           <BtnCancel
@@ -85,10 +95,10 @@ function Product_add_page() {
             type="text"
             placeholder="Sku"
             {...register("sku", {
-              required: "SKU is required",
+              required: "Please, submit required data",
               pattern: {
                 value: /^[a-zA-Z0-9]+$/,
-                message: "Sku must  contain only numbers and letters",
+                message: "Please, provide the data of indicated type",
               },
             })}
             value={sku}
@@ -106,10 +116,10 @@ function Product_add_page() {
             type="text"
             placeholder="Name"
             {...register("name", {
-              required: "Name is required",
+              required: "Please, submit required data",
               pattern: {
                 value: /^[a-zA-Z0-9]+$/,
-                message: "Name must  contain only numbers and letters",
+                message: "Please, provide the data of indicated type",
               },
             })}
             value={name}
@@ -127,11 +137,11 @@ function Product_add_page() {
             type="number"
             placeholder="Price"
             {...register("price", {
-              required: "Price Is Required",
+              required: "Please, submit required data",
               min: 0,
               pattern: {
                 value: /^\d+$/,
-                message: "Price must contain only numbers",
+                message: "Please, provide the data of indicated type",
               },
             })}
             value={price}
@@ -147,18 +157,29 @@ function Product_add_page() {
         <InputDivs>
           <label>Product Type</label>
           <Select
+            {...register("type", {
+              required: "Please select a type",
+              validate: (value) =>
+                value !== "Type Switcher" || "Please select a type",
+            })}
             onChange={(e) => {
               setShowDVDInput(e.target.value === "DVD");
               setShowBookInput(e.target.value === "Book");
               setShowFurnitureInput(e.target.value === "Furniture");
             }}
           >
-            <option defaultValue="Type Switcher">Type Switcher</option>
-            <option>DVD</option>
-            <option>Book</option>
-            <option>Furniture</option>
+            <option value="Type Switcher">Type Switcher</option>
+            <option value="DVD">DVD</option>
+            <option value="Book">Book</option>
+            <option value="Furniture">Furniture</option>
           </Select>
         </InputDivs>
+        {errors.type && (
+          <p style={{ color: "red", fontSize: "0.8", textAlign: "right" }}>
+            {errors.type.message}{" "}
+          </p>
+        )}
+
         {showDVDInput && (
           <div>
             <h3>Provide Size</h3>
@@ -169,10 +190,10 @@ function Product_add_page() {
                 value={dvd}
                 placeholder="DVD"
                 {...register("dvd", {
-                  required: "Size is required",
+                  required: "Please, submit required data",
                   pattern: {
                     value: /^\d+$/,
-                    message: "Must contain only numbers",
+                    message: "Please, provide the data of indicated type",
                   },
                 })}
                 onChange={(e) => setDvd(e.target.value)}
@@ -194,10 +215,10 @@ function Product_add_page() {
                 type="text"
                 placeholder="Book"
                 {...register("book", {
-                  required: "Weight is required",
+                  required: "Please, submit required data",
                   pattern: {
                     value: /^\d+$/,
-                    message: "Must Contain Only Numbers",
+                    message: "Please, provide the data of indicated type",
                   },
                 })}
                 value={book}
@@ -216,15 +237,15 @@ function Product_add_page() {
             <h3>Provide Dimensions</h3>
             <Furn>
               <InputDivs>
-                <label>Height </label>
+                <label>Height (Cm) </label>
                 <Input
                   type="text"
                   placeholder="height"
                   {...register("height", {
-                    required: "Height is required",
+                    required: "Please, submit required data",
                     pattern: {
                       value: /^\d+$/,
-                      message: "Must Contain Only Numbers",
+                      message: "Please, provide the data of indicated type",
                     },
                   })}
                   value={height}
@@ -243,15 +264,19 @@ function Product_add_page() {
                 </p>
               )}
               <InputDivs>
-                <label>Width</label>
+                <label>
+                  Width
+                  <br />
+                  (Cm)
+                </label>
                 <Input
                   type="text"
                   placeholder="width"
                   {...register("width", {
-                    required: "Width is required",
+                    required: "Please, submit required data",
                     pattern: {
                       value: /^\d+$/,
-                      message: "Must Contain Only Numbers",
+                      message: "Please, provide the data of indicated type",
                     },
                   })}
                   value={width}
@@ -270,15 +295,15 @@ function Product_add_page() {
                 </p>
               )}
               <InputDivs>
-                <label>Length</label>
+                <label>Length (Cm)</label>
                 <Input
                   type="text"
                   placeholder="Length"
                   {...register("length", {
-                    required: "Length is required",
+                    required: "Please, submit required data",
                     pattern: {
                       value: /^\d+$/,
-                      message: "Must Contain Only Numbers",
+                      message: "Please, provide the data of indicated type",
                     },
                   })}
                   value={length}
@@ -305,86 +330,3 @@ function Product_add_page() {
 }
 
 export default Product_add_page;
-const Select = styled.select`
-  padding: 0.4rem 0;
-  font-weight: bold;
-  outline: none;
-  &:focus {
-    border: none;
-    outline: 1px solid lightgrey;
-  }
-`;
-const Input = styled.input`
-  width: 14rem;
-  height: 2rem;
-  border-radius: 5px;
-  text-indent: 10px;
-  border: 1px solid lightgrey;
-  &:focus {
-    outline: 1px solid gray;
-  }
-  box-shadow: 0 2px 4px lightgrey;
-`;
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-`;
-const InputDivs = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 5rem;
-`;
-
-const Furn = styled.div`
-  /* border: 1px solid red; */
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding-top: 1rem;
-  justify-content: space-between;
-  width: 25rem;
-  @media (width < 500px) {
-    width: 20rem;
-  }
-`;
-
-const FormContainer = styled.div`
-  /* border: 1px solid red; */
-  padding: 3rem;
-  width: 25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-
-  @media (width>500px) {
-    width: 25rem;
-  }
-  @media (width<500px) {
-    width: 22rem;
-  }
-`;
-const BtnSave = styled.button`
-  text-transform: uppercase;
-  padding: 0.5rem 0.5rem;
-  background-color: whitesmoke;
-  margin: 0 0.5rem;
-  border: 1px solid lightgrey;
-  cursor: pointer;
-  border-radius: 5px;
-`;
-const BtnCancel = styled.button`
-  text-transform: uppercase;
-  padding: 0.5rem 0.5rem;
-  border: 1px solid lightgrey;
-  background-color: whitesmoke;
-  cursor: pointer;
-  border-radius: 5px;
-`;
-const Container = styled.div`
-  border-bottom: 1px solid lightgrey;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 0.6rem;
-`;
