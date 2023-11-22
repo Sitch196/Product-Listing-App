@@ -1,7 +1,6 @@
 import { ProductProvider } from "./Context";
 import styled from "styled-components";
 import { Route, Routes } from "react-router-dom";
-import Footer from "./Footer/Footer";
 import Product_add_page from "./Components/Product_add_page";
 import Product_list_page from "./Components/Product_list_page";
 import { createGlobalStyle } from "styled-components";
@@ -23,7 +22,6 @@ function App() {
           <Route path="/" element={<Product_list_page />} />
           <Route path="product_add_page" element={<Product_add_page />} />
         </Routes>
-        <Footer />
       </AppContainer>
     </ProductProvider>
   );
